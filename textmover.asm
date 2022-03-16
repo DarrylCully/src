@@ -163,15 +163,11 @@ score_ypos db 20
 posx db 15
 posy db 21
 
-playersprite db 0x91
-
-ASCII_SPACE equ 0x20
-ASCII_AT equ 0x16
-MAX_X equ 31
-MAX_Y equ 21
-ATTR_BLUE_INK_YELLOW_PP equ %00011110
+playersprite db 0x92
 
 
+
+include "constants.asm"
 include "sprites\udgs.asm"
 
 
