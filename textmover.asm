@@ -157,7 +157,7 @@ movedown:
 ; Variables
 score dw 2555
 score_xpos db 0
-score_ypos db 22
+score_ypos db 20
 
 
 posx db 15
@@ -171,25 +171,8 @@ MAX_X equ 31
 MAX_Y equ 21
 ATTR_BLUE_INK_YELLOW_PP equ %00011110
 
-udg1 
-    db %11111111
-    db %11010111
-    db %11000111
-    db %11000011
-    db %11111111
-    db %10111001
-    db %11100111
-    db %11000011
-;
-    db %11111111
-    db %10000000
-    db %01000100
-    db %01101100
-    db %00000000
-    db %01000100
-    db %01111100
-    db %11111111
 
+include "sprites\udgs.asm"
 
 
     end ENTRY_POINT
