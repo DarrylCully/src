@@ -18,11 +18,123 @@ ENTRY_POINT equ 32768
 
     
     call 0xdaf ;ROM routine of spectrum which clears screen and opens channel 2
-    ld hl,udg1 ;HL pointer to Udg1
+    ld hl,bitmap1 ;HL pointer to Udg1
     ld (23675), hl
     ld a, ATTR_BLUE_INK_YELLOW_PP
     ld (23693), a ;poke value into the screen colour attributes memory address
     call 0xdaf ; clear screen
+   
+    
+    ; call playsound_a_0_5
+    ; call delay
+    ; call playsound_asharp_0_5
+    ; call delay
+    ; call playsound_b_0_5
+    ; call delay
+    ; call playsound_cmiddle_0_5
+    ; call delay
+    ; call playsound_csharp_0_5
+    ; call delay
+    ; call playsound_d_0_5
+    ; call delay
+    ; call playsound_dsharp_0_5
+    ; call delay
+    ; call playsound_e_0_5
+    ; call delay
+    ; call playsound_f_0_5
+    ; call delay
+    ; call playsound_fsharp_0_5
+    ; call delay
+    ; call playsound_g_0_5
+    ; call delay
+    ; call playsound_gsharp_0_5
+
+
+
+    ;soundtrack
+    call playsound_g_0_25
+    ; call playsound_f_0_25
+    ; call playsound_dsharp_0_25
+    ; call playsound_f_0_25
+
+    ; call playsound_g_0_25
+    ; call playsound_g_0_5
+
+    ; call playsound_asharp_0_5
+    ; call playsound_asharp_0_5
+
+    ; call playsound_cmiddle_0_5
+    ; call playsound_f_0_5
+
+    ; call playsound_g_0_5
+    ; call playsound_g_0_25
+
+    ; call playsound_asharp_0_5
+    ; call playsound_asharp_0_25
+
+    ; call playsound_cmiddle_0_25
+    ; call playsound_f_0_25
+
+    ; call playsound_g_0_5
+    ; call playsound_f_0_25
+    ; call playsound_dsharp_0_25
+
+    ; call playsound_g_0_5
+    ; call playsound_f_0_25
+    ; call playsound_dsharp_0_25
+
+    ; call playsound_g_0_5
+    ; call playsound_f_0_25
+    ; call playsound_dsharp_0_5
+
+    ; call playsound_g_0_25
+    ; call playsound_f_0_5
+    
+    ; call playsound_g_0_25
+    ; call playsound_f_0_25
+    ; call playsound_dsharp_0_25
+
+    ; call playsound_f_0_5
+
+    ; call playsound_g_0_25
+    ; call playsound_g_0_25
+
+    ; call playsound_asharp_0_25
+    ; call playsound_asharp_0_25
+
+    ; call playsound_cmiddle_0_25
+    ; call playsound_f_0_5
+
+    ; call playsound_g_0_25
+    ; call playsound_g_0_25
+
+    ; call playsound_asharp_0_25
+    ; call playsound_asharp_0_25
+
+    ; call playsound_cmiddle_0_25
+    ; call playsound_f_0_25
+
+
+    ; call playsound_g_0_5
+    ; call playsound_f_0_25
+    ; call playsound_dsharp_0_25
+
+    ; call playsound_g_0_5
+    ; call playsound_f_0_5
+    ; call playsound_dsharp_0_25
+
+    ; call playsound_g_0_5
+    ; call playsound_f_0_5
+    ; call playsound_dsharp_0_5
+
+    ; call playsound_g_0_25
+    ; call playsound_f_0_5
+    
+    ; call playsound_g_0_25
+    ; call playsound_f_0_25
+    ; call playsound_dsharp_0_25
+
+    ; call playsound_f_0_5
 
 loop:
     halt ;waits for the interrupt, locks fps at 50
@@ -58,9 +170,9 @@ loop:
     ld bc, 64510
     in a,(c)
     rra
-    push af
+    ;push af
     ;call nc, Q
-    pop af
+    ;pop af
     rra
     push af
     call nc, moveup
@@ -94,21 +206,11 @@ deletesprite:
 setposition:
     ld a,ASCII_AT
     rst 16
-    ld a,d
+    ld a,d ; posx
     rst 16
-    ld a,e
+    ld a,e ;posy
     rst 16
     ret
-     
-
-; setposition:
-;     ld a,ASCII_AT
-;     rst 16
-;     ld a,(posy)
-;     rst 16
-;     ld a,(posx)
-;     rst 16
-;     ret
      
 
 moveleft:
@@ -148,10 +250,10 @@ movedown:
     ld (posy),a
     ret
 
-;delay ld b,10
-;delay0 halt
-;       djnz delay0
-;       ret
+delay ld b,10
+delay0 halt
+       djnz delay0
+       ret
 
 
 ; Variables
@@ -163,12 +265,13 @@ score_ypos db 20
 posx db 15
 posy db 21
 
-playersprite db 0x92
+playersprite db 0x90
 
 
 
 include "constants.asm"
 include "sprites\udgs.asm"
+include "audio.asm"
 
 
     end ENTRY_POINT
