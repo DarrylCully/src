@@ -18,60 +18,69 @@ playermoveinput:
     pop af
     rra ;roll bits to the right; bit1 moves into the carry bit of F
     push af
-   ; call nc, movedown ; Would read input 1 = S
+    call nc, shoot ; Would read input 1 = S
     pop af
     rra
     push af
     call nc, moveright ; Reads input 3 = D
     pop af
-    ;rra
-    ;push af
-  ; call nc,KeyPress_4
-    ;pop af
-    ;rra
-    ;push af
-   ; call nc,KeyPress_5
-    ;pop af
-    ;and %00000010 ; and 2; mask out all bits except bit1
+    ; rra
+    ; push af
+    ; call nc, F pressed
+    ; pop af
+    ; rra
+    ; push af
+    ; call nc, G pressed
+    ; pop af
+    ret
 
-    ld bc, 64510
-    in a,(c)
-    rra
-    ;push af
-    ;call nc, Q
-    ;pop af
-    rra
-    push af
-    ;call nc, moveup
-    pop af
+; General rules on CP
+; if A == N, then Z flag is set
+; if A != N, then Z flag is reset
+; if A < N, then C flag is set
+; if A >= N, then C flag is reset
 
 moveleft:
     ld a,(ix+1) ; inputting the position of the player
-    sub 1
+    cp  PLAYER_SPEED_X
+    ret c
+    sub PLAYER_SPEED_X
     ld (ix+1),a
     ret
 
-
-    ; cp  0 ; comparing the players x position to the value of 32 so that the player does not exceed 256
-    ; ;ret nc ; if 256 reached code below stops running
-    ; ret z
-    ; ld a,(posx) ;is this needed?
-    ; dec a
-    ; ld (posx),a
-    ; ret
 
 moveright:
     ld a,(ix+1) ; inputting the position of the player
-    add a,1
+    cp  SCREEN_WIDTH-PLAYER_WIDTH_PX
+    ret nc
+    add a,PLAYER_SPEED_X
     ld (ix+1),a
     ret
 
-playerspeed_x db 1
+shoot:
+    ;Add timer
+    ld iy,bulletdata
+    call spawnbullet
+    ret
 
-    ; ld a,(posx) ; inputting the position of the player
-    ; cp  MAX_X ; comparing the players x position to the value of 32 so that the player does not exceed 256
-    ; ret nc ; if 256 reached code below stops running
-    ; ld a,(posx)
-    ; inc a
-    ; ld (posx),a
-    ; ret 
+spawnbullet:
+    ld a,(iy)
+    cp 255
+    ret z
+    ld a,(iy)
+    cp 1
+    jp z, spawnbullet_next
+    ;spawn it
+    ld a,1
+    ld (iy),a
+    ;ld a,(ix+1)
+    ;ld (iy+1), a
+    ;ld a,(ix+2)
+    ;sub 9
+    ;ld (iy+2),a
+    ret
+
+spawnbullet_next:
+    ld bc,BULLET_DATA_LENGTH
+    add iy,bc
+    jp spawnbullet
