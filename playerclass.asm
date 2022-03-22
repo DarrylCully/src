@@ -24,14 +24,14 @@ playermoveinput:
     push af
     call nc, moveright ; Reads input 3 = D
     pop af
-    ; rra
-    ; push af
+    rra
+    push af
     ; call nc, F pressed
-    ; pop af
-    ; rra
-    ; push af
+    pop af
+     rra
+    push af
     ; call nc, G pressed
-    ; pop af
+    pop af
     ret
 
 ; General rules on CP
@@ -41,7 +41,7 @@ playermoveinput:
 ; if A >= N, then C flag is reset
 
 moveleft:
-    ld a,(ix+1) ; inputting the position of the player
+    ld a, (ix+1) ; inputting the position of the player
     cp  PLAYER_SPEED_X
     ret c
     sub PLAYER_SPEED_X
@@ -51,7 +51,7 @@ moveleft:
 
 moveright:
     ld a,(ix+1) ; inputting the position of the player
-    cp  SCREEN_WIDTH-PLAYER_WIDTH_PX
+    cp  SCREEN_WIDTH-PLAYER_SPEED_X-PLAYER_WIDTH_PX
     ret nc
     add a,PLAYER_SPEED_X
     ld (ix+1),a
@@ -59,28 +59,13 @@ moveright:
 
 shoot:
     ;Add timer
-    ld iy,bulletdata
-    call spawnbullet
+    ld a,(bullet_timer)
+    cp BULLET_INTERVAL
+    ret c
+    ld iy,bullet_data
+    call spawn_bullet
+    xor a
+    ld (bullet_timer),a ;reset timer to 0
     ret
 
-spawnbullet:
-    ld a,(iy)
-    cp 255
-    ret z
-    ld a,(iy)
-    cp 1
-    jp z, spawnbullet_next
-    ;spawn it
-    ld a,1
-    ld (iy),a
-    ;ld a,(ix+1)
-    ;ld (iy+1), a
-    ;ld a,(ix+2)
-    ;sub 9
-    ;ld (iy+2),a
-    ret
 
-spawnbullet_next:
-    ld bc,BULLET_DATA_LENGTH
-    add iy,bc
-    jp spawnbullet
