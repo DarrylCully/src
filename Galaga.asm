@@ -11,35 +11,30 @@ main:
     halt
     halt
 
-    ld ix,enemy_data
-    ld a,(b_enemy_spawn_complete)
-    cp 0
-    call z,spawn_enemy_wave
+    
 
     ld a,(bullet_timer)
     inc a
     ld (bullet_timer),a
-    
-    
+
     ld ix, player_data
     call deletesprites
 
     ld ix,bullet_data
-    call delete_bullets
+    call update_bullets
 
     ld ix,enemy_data
-    call delete_enemies
+    call update_enemies
 
     ld ix,player_data
     call playermoveinput
     
-    ld ix,bullet_data
-    call move_bullets
+    ; ld ix,bullet_data
+    ; call move_bullets
 
     ld ix, player_data
     ld hl,ship
     call drawsprite
-
 
     ld ix,bullet_data
     ld hl,bullet1
@@ -49,42 +44,53 @@ main:
     ld hl,enemy1
     call draw_enemies
 
+    ld ix,enemy_data
+    ld a,(b_enemy_spawn_complete)
+    cp 0
+    call z,spawn_enemy_wave
 
     jp main
 
-delete_bullets:
+update_bullets:
     ld a,(ix)
     cp 255
     ret z
    ; ld a,(ix)
     cp 0
-    jp z,delete_bullets_next
+    jp z,update_bullets_next
     call deletesprites
-
-delete_bullets_next:
-    ld bc,BULLET_DATA_LENGTH
-    add ix,bc
-    jp delete_bullets
-
-move_bullets:
-    ld a,(ix)
-    cp 255
-    ret z
-    ;ld a,(ix)
-    cp 0
-    jp z, move_bullets_next
-    ;move_bullets
+    ;move 
     ld a,(ix+2)
     cp BULLET_MIN_Y
     call c, kill_bullet
-    jp c, move_bullets_next
+    jp c, update_bullets_next
     sub BULLET_SPEED
     ld (ix+2),a
 
-move_bullets_next:
+update_bullets_next:
     ld bc,BULLET_DATA_LENGTH
     add ix,bc
-    jp move_bullets
+    jp update_bullets
+
+; move_bullets:
+;     ld a,(ix)
+;     cp 255
+;     ret z
+;     ;ld a,(ix)
+;     cp 0
+;     jp z, move_bullets_next
+;     ;move_bullets
+;     ld a,(ix+2)
+;     cp BULLET_MIN_Y
+;     call c, kill_bullet
+;     jp c, move_bullets_next
+;     sub BULLET_SPEED
+;     ld (ix+2),a
+
+; move_bullets_next:
+;     ld bc,BULLET_DATA_LENGTH
+;     add ix,bc
+;     jp move_bullets
 
 kill_bullet:
     ld (ix), 0
@@ -98,7 +104,9 @@ draw_bullets:
     cp 0
     jp z, draw_bullets_next
     ;if here, bullet alive
+    push hl
     call drawsprite
+    pop hl
 
 draw_bullets_next:
     ld bc, BULLET_DATA_LENGTH
@@ -142,18 +150,20 @@ end_spawn:
     ld (b_enemy_spawn_complete),a
     ret
 
-delete_enemies:
+update_enemies:
     ld a,(ix)
     cp 255
     ret z
     ;ld a,(ix)
     cp 0
-    jp z, delete_enemies_next
+    jp z, update_enemies_next
     call deletesprites
-delete_enemies_next:
+    ;move enemies
+    
+update_enemies_next:
     ld bc,ENEMY_DATA_LENGTH
     add ix,bc
-    jp delete_enemies
+    jp update_enemies
 
 ;move_enemies:
 
@@ -195,8 +205,8 @@ enemy_data:
     db 0, ((255/5)*0)+8, 48, 2, 8
     db 0, ((255/5)*1)+8, 48, 2, 8
     db 0, ((255/5)*2)+8, 48, 2, 8
-    db 0, ((255/5)*3)+8, 48, 2, 8
-    db 0, ((255/5)*4)+8, 48, 2, 8
+    ;db 0, ((255/5)*3)+8, 48, 2, 8
+    ;db 0, ((255/5)*4)+8, 48, 2, 8
     db 255
 
 ENEMY_DATA_LENGTH equ 5
