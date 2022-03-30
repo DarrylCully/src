@@ -1,6 +1,11 @@
+;0x4000 pixel memory
+;0x5800 colour memory
+
 ENTRY_POINT equ 32768
 
     org ENTRY_POINT
+
+
 
     call 0xDAF
     ld a,2
@@ -11,7 +16,8 @@ main:
     halt
     halt
 
-    
+    ; ld de,PIXEL_MEM_START
+    ; call clearpixels
 
     ld a,(bullet_timer)
     inc a
@@ -50,6 +56,14 @@ main:
     call z,spawn_enemy_wave
 
     jp main
+
+; clearpixels:
+;     xor a
+;     ld (de),a
+;     inc de
+;     ld a,d
+;     cp ATTRIBUTE_MEM_START_UPPER_BYTE
+;     jp nz,clearpixels
 
 update_bullets:
     ld a,(ix)
@@ -192,7 +206,7 @@ draw_enemies_next:
 ;    db 1, (255/2)-8, 180 - 8, 2, 16
 
 player_data:
-    db 1,(255/2)-7,180-8,2,16
+    db 1,(255/2)-7,170-8,2,16
 
 
 bullet_data:
@@ -213,11 +227,11 @@ ENEMY_DATA_LENGTH equ 5
 
 PLAYER_WIDTH_PX equ 16
 PLAYER_SPEED_X equ 16
-SCREEN_WIDTH equ 255
 
-BULLET_SPEED equ 9
+
+BULLET_SPEED equ 16
 BULLET_MIN_Y equ 13
-BULLET_INTERVAL equ 16
+BULLET_INTERVAL equ 8
 
 ENEMY_DEFAULT_Y equ 24
 ENEMY_DEFAULT_SPEED equ 4

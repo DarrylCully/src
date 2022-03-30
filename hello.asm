@@ -14,8 +14,8 @@ loop:
 
 
 hellostring 
-	db 'Hello Cunts!', 0xd, 'Hello world! I hate this kind of programming'
-	db 'I hate programming', 0xd, 'why do i have to suffer'
+	db 'Hello world!', 0xd, 'Hello world! I hate this'
+	db 'This is assembly', 0xd, 'why do i have to suffer'
 endof_hellostring 	equ $
 
     end ENTRY_POINT
